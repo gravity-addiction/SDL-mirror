@@ -166,9 +166,9 @@ int FB_EnterGraphicsMode(_THIS)
 			if ( ioctl(keyboard_fd, VT_GETSTATE, &vtstate) == 0 ) {
 				saved_vt = vtstate.v_active;
 			}
-			if ( ioctl(keyboard_fd, VT_ACTIVATE, current_vt) == 0 ) {
+			/*if ( ioctl(keyboard_fd, VT_ACTIVATE, current_vt) == 0 ) {
 				ioctl(keyboard_fd, VT_WAITACTIVE, current_vt);
-			}
+			}*/
 		}
 
 		/* Set the terminal input mode */
@@ -225,9 +225,10 @@ void FB_LeaveGraphicsMode(_THIS)
 
 		/* Head back over to the original virtual terminal */
 		ioctl(keyboard_fd, VT_UNLOCKSWITCH, 1);
-		if ( saved_vt > 0 ) {
+		/*if ( saved_vt > 0 ) {
+			printf("Switching Back Over Consoles\n");
 			ioctl(keyboard_fd, VT_ACTIVATE, saved_vt);
-		}
+		}*/
 	}
 }
 
@@ -383,7 +384,7 @@ static int gpm_available(char *proto, size_t protolen)
 	char args[PATH_MAX], *arg;
 
 	/* Don't bother looking if the fifo isn't there */
-#ifdef DEBUG_MOUSE 
+#ifdef DEBUG_MOUSE
 	fprintf(stderr,"testing gpm\n");
 #endif
 	if ( access(GPM_NODE_FIFO, F_OK) < 0 ) {
@@ -403,7 +404,7 @@ static int gpm_available(char *proto, size_t protolen)
 				arg = args;
 				while ( len > 0 ) {
 					arglen = SDL_strlen(arg)+1;
-#ifdef DEBUG_MOUSE 
+#ifdef DEBUG_MOUSE
 				        fprintf(stderr,"gpm arg %s len %d\n",arg,arglen);
 #endif
 					if ( SDL_strcmp(arg, "-t") == 0) {
@@ -771,7 +772,7 @@ static void handle_mouse(_THIS)
 	int dx = 0, dy = 0;
 	int packetsize = 0;
 	int realx, realy;
-	
+
 	/* Figure out the mouse packet size */
 	switch (mouse_drv) {
 		case MOUSE_NONE:
@@ -807,9 +808,9 @@ static void handle_mouse(_THIS)
 
 	/* Special handling for the quite sensitive ELO controller */
 	if (mouse_drv == MOUSE_ELO) {
-	
+
 	}
-	
+
 	/* Read as many packets as possible */
 	nread = read(mouse_fd, &mousebuf[start], BUFSIZ-start);
 	if ( nread < 0 ) {
@@ -978,7 +979,6 @@ static void switch_vt(_THIS, unsigned short which)
 	     (which == vtstate.v_active) ) {
 		return;
 	}
-
 	/* New console, switch to it */
 	SDL_mutexP(hw_lock);
 	switch_vt_prep(this);
@@ -1204,7 +1204,7 @@ void FB_InitOSKeymap(_THIS)
 	    case K_PAUSE: keymap[i] = SDLK_PAUSE;     break;
 
 	    case 127: keymap[i] = SDLK_BACKSPACE; break;
-	     
+
 	    default: break;
 	  }
 	}
