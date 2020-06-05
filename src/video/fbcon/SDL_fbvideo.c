@@ -60,7 +60,7 @@
 static inline void outb (unsigned char value, unsigned short port)
 {
   __asm__ __volatile__ ("outb %b0,%w1"::"a" (value), "Nd" (port));
-} 
+}
 */
 #endif /* FB_TYPE_VGA_PLANES */
 
@@ -287,7 +287,7 @@ static int read_fbmodes_line(FILE*f, char* line, int length)
 	int blank;
 	char* c;
 	int i;
-	
+
 	blank=0;
 	/* find a relevant line */
 	do
@@ -297,7 +297,7 @@ static int read_fbmodes_line(FILE*f, char* line, int length)
 		c=line;
 		while(((*c=='\t')||(*c==' '))&&(*c!=0))
 			c++;
-		
+
 		if ((*c=='\n')||(*c=='#')||(*c==0))
 			blank=1;
 		else
@@ -329,18 +329,18 @@ static int read_fbmodes_mode(FILE *f, struct fb_var_screeninfo *vinfo)
 	}
 	while(1);
 
-	SDL_sscanf(line, "geometry %d %d %d %d %d", &vinfo->xres, &vinfo->yres, 
+	SDL_sscanf(line, "geometry %d %d %d %d %d", &vinfo->xres, &vinfo->yres,
 			&vinfo->xres_virtual, &vinfo->yres_virtual, &vinfo->bits_per_pixel);
 	if (read_fbmodes_line(f, line, sizeof(line))==0)
 		return 0;
-			
-	SDL_sscanf(line, "timings %d %d %d %d %d %d %d", &vinfo->pixclock, 
-			&vinfo->left_margin, &vinfo->right_margin, &vinfo->upper_margin, 
+
+	SDL_sscanf(line, "timings %d %d %d %d %d %d %d", &vinfo->pixclock,
+			&vinfo->left_margin, &vinfo->right_margin, &vinfo->upper_margin,
 			&vinfo->lower_margin, &vinfo->hsync_len, &vinfo->vsync_len);
-		
+
 	vinfo->sync=0;
 	vinfo->vmode=FB_VMODE_NONINTERLACED;
-				
+
 	/* Parse misc options */
 	do {
 		if (read_fbmodes_line(f, line, sizeof(line))==0)
@@ -789,7 +789,7 @@ static int FB_VideoInit(_THIS, SDL_PixelFormat *vformat)
 		if (shadow_mem == NULL) {
 			SDL_SetError("No memory for shadow");
 			return (-1);
-		} 
+		}
 	}
 
 	/* Enable mouse and keyboard support */
@@ -1466,7 +1466,7 @@ static void FB_blit16(Uint8 *byte_src_pos, int src_right_delta, int src_down_del
 #define BLOCKSIZE_W 32
 #define BLOCKSIZE_H 32
 
-static void FB_blit16blocked(Uint8 *byte_src_pos, int src_right_delta, int src_down_delta, 
+static void FB_blit16blocked(Uint8 *byte_src_pos, int src_right_delta, int src_down_delta,
 		Uint8 *byte_dst_pos, int dst_linebytes, int width, int height)
 {
 	int w;
@@ -1519,9 +1519,9 @@ static void FB_DirectUpdate(_THIS, int numrects, SDL_Rect *rects)
 		char *src_start;
 		char *dst_start;
 
-		x1 = rects[i].x; 
+		x1 = rects[i].x;
 		y1 = rects[i].y;
-		x2 = x1 + rects[i].w; 
+		x2 = x1 + rects[i].w;
 		y2 = y1 + rects[i].h;
 
 		if (x1 < 0) {
@@ -1594,12 +1594,12 @@ static void FB_DirectUpdate(_THIS, int numrects, SDL_Rect *rects)
 
 		src_start = shadow_mem +
 			(sha_y1 * width + sha_x1) * bytes_per_pixel;
-		dst_start = mapped_mem + mapped_offset + scr_y1 * physlinebytes + 
+		dst_start = mapped_mem + mapped_offset + scr_y1 * physlinebytes +
 			scr_x1 * bytes_per_pixel;
 
 		blitFunc((Uint8 *) src_start,
-				shadow_right_delta, 
-				shadow_down_delta, 
+				shadow_right_delta,
+				shadow_down_delta,
 				(Uint8 *) dst_start,
 				physlinebytes,
 				scr_x2 - scr_x1,
@@ -1642,7 +1642,7 @@ static void FB_VGA16Update(_THIS, int numrects, SDL_Rect *rects)
 	left = rects->x & ~7;
         width = (rects->w + 7) >> 3;
         height = rects->h;
-        src = (Uint32*)screen->pixels + (rects->y * SRCPitch) + (left >> 2); 
+        src = (Uint32*)screen->pixels + (rects->y * SRCPitch) + (left >> 2);
         dst = (Uint8*)mapped_mem + (rects->y * FBPitch) + (left >> 3);
 
 	if((phase = (long)dst & 3L)) {
@@ -1741,7 +1741,7 @@ static void FB_VGA16Update(_THIS, int numrects, SDL_Rect *rects)
  		*dstPtr++ = (m >> 26) | (m >> 17) | (m >> 8) | (m << 1);
 		srcPtr += 2;
 	    }
-	    
+
 	    writeSeq(0x02, 1 << 3);
 	    dstPtr = dst;
 	    srcPtr = src;
