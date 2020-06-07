@@ -200,14 +200,18 @@ int FB_EnterGraphicsMode(_THIS)
 		}
 		/* This will fail if we aren't root or this isn't our tty */
 		if ( ioctl(keyboard_fd, KDSKBMODE, K_MEDIUMRAW) < 0 ) {
+			/*
 			FB_CloseKeyboard(this);
 			SDL_SetError("Unable to set keyboard in raw mode");
 			return(-1);
+			*/
 		}
 		if ( ioctl(keyboard_fd, KDSETMODE, KD_GRAPHICS) < 0 ) {
+			/*
 			FB_CloseKeyboard(this);
 			SDL_SetError("Unable to set keyboard in graphics mode");
 			return(-1);
+			*/
 		}
 		/* Prevent switching the virtual terminal */
 		ioctl(keyboard_fd, VT_LOCKSWITCH, 1);
@@ -261,7 +265,7 @@ int FB_OpenKeyboard(_THIS)
 		}
 		ioctl(tty0_fd, VT_OPENQRY, &current_vt);
 		close(tty0_fd);
-		if ( (geteuid() == 0) && (current_vt > 0) ) {
+		if ( /* (geteuid() == 0) && */ (current_vt > 0) ) {
 			for ( i=0; vcs[i] && (keyboard_fd < 0); ++i ) {
 				char vtpath[12];
 
@@ -304,9 +308,11 @@ int FB_OpenKeyboard(_THIS)
 		/* Make sure that our input is a console terminal */
 		{ int dummy;
 		  if ( ioctl(keyboard_fd, KDGKBMODE, &dummy) < 0 ) {
+			/*
 			close(keyboard_fd);
 			keyboard_fd = -1;
 			SDL_SetError("Unable to open a console terminal");
+			*/
 		  }
 		}
 
