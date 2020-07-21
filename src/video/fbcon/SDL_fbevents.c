@@ -180,16 +180,16 @@ int FB_EnterGraphicsMode(_THIS)
 			keyboard_fd = -1;
 			return(-1);
 		}
-		/*
 		if ( ioctl(keyboard_fd, KDGKBMODE, &saved_kbd_mode) < 0 ) {
+			/*
 			SDL_SetError("Unable to get current keyboard mode");
 			if ( keyboard_fd > 0 ) {
 				close(keyboard_fd);
 			}
 			keyboard_fd = -1;
 			return(-1);
+			*/
 		}
-		*/
 		keyboard_termios = saved_kbd_termios;
 		keyboard_termios.c_lflag &= ~(ICANON | ECHO | ISIG);
 		keyboard_termios.c_iflag &= ~(ISTRIP | IGNCR | ICRNL | INLCR | IXOFF | IXON);
