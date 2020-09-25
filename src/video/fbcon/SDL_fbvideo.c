@@ -794,8 +794,13 @@ static int FB_VideoInit(_THIS, SDL_PixelFormat *vformat)
 
 	/* Enable mouse and keyboard support */
 	if ( FB_OpenKeyboard(this) < 0 ) {
-		FB_VideoQuit(this);
-		return(-1);
+		const char *sdl_nokeyboard;
+
+		sdl_nokeyboard = SDL_getenv("SDL_NOKEYBOARD");
+		if ( ! sdl_nokeyboard ) {
+		    FB_VideoQuit(this);
+		    return(-1);
+		}
 	}
 	if ( FB_OpenMouse(this) < 0 ) {
 		const char *sdl_nomouse;
@@ -942,8 +947,12 @@ static SDL_Surface *FB_SetVGA16Mode(_THIS, SDL_Surface *current,
 	struct fb_fix_screeninfo finfo;
 	struct fb_var_screeninfo vinfo;
 
+	const char *sdl_nokeyboard;
+
+	sdl_nokeyboard = SDL_getenv("SDL_NOKEYBOARD");
+
 	/* Set the terminal into graphics mode */
-	if ( FB_EnterGraphicsMode(this) < 0 ) {
+	if ( ! sdl_nokeyboard && FB_EnterGraphicsMode(this) < 0 ) {
 		return(NULL);
 	}
 
@@ -1007,8 +1016,12 @@ static SDL_Surface *FB_SetVideoMode(_THIS, SDL_Surface *current,
 	char *surfaces_mem;
 	int surfaces_len;
 
+	const char *sdl_nokeyboard;
+
+	sdl_nokeyboard = SDL_getenv("SDL_NOKEYBOARD");
+
 	/* Set the terminal into graphics mode */
-	if ( FB_EnterGraphicsMode(this) < 0 ) {
+	if ( ! sdl_nokeyboard && FB_EnterGraphicsMode(this) < 0 ) {
 		return(NULL);
 	}
 

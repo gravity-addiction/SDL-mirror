@@ -155,7 +155,6 @@ int FB_InGraphicsMode(_THIS)
 int FB_EnterGraphicsMode(_THIS)
 {
 	struct termios keyboard_termios;
-	return keyboard_fd;
 
 	/* Set medium-raw keyboard mode */
 	if ( (keyboard_fd >= 0) && !FB_InGraphicsMode(this) ) {
@@ -245,6 +244,10 @@ void FB_CloseKeyboard(_THIS)
 
 int FB_OpenKeyboard(_THIS)
 {
+	const char *sdl_nokeyboard;
+
+	sdl_nokeyboard = SDL_getenv("SDL_NOKEYBOARD");
+
 	/* Open only if not already opened */
  	if ( keyboard_fd < 0 ) {
 		static const char * const tty0[] = { "/dev/tty0", "/dev/vc/0", NULL };
@@ -261,7 +264,7 @@ int FB_OpenKeyboard(_THIS)
 		}
 		ioctl(tty0_fd, VT_OPENQRY, &current_vt);
 		close(tty0_fd);
-		if ( /*(geteuid() == 0) && */(current_vt > 0) ) {
+		if ( (! sdl_nokeyboard && geteuid() == 0) && (current_vt > 0) ) {
 			for ( i=0; vcs[i] && (keyboard_fd < 0); ++i ) {
 				char vtpath[12];
 
@@ -302,13 +305,12 @@ int FB_OpenKeyboard(_THIS)
  		saved_kbd_mode = -1;
 
 		/* Make sure that our input is a console terminal */
+		if ( ! sdl_nokeyboard ) 
 		{ int dummy;
 		  if ( ioctl(keyboard_fd, KDGKBMODE, &dummy) < 0 ) {
-			  /*
 			close(keyboard_fd);
 			keyboard_fd = -1;
 			SDL_SetError("Unable to open a console terminal");
-			*/
 		  }
 		}
 
